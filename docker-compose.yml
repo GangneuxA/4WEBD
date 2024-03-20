@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+  buy:
+    container_name: buy
+    build: ./buy
+    restart: always
+    ports:
+      - "3003:3003"
+    links:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+
+  event:
+    container_name: event
+    build: ./event
+    restart: always
+    ports:
+      - "3002:3002"
+    links:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+
+  ftapi:
+    container_name: ftapi
+    build: ./frontapi
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+      - users
+      - event
+      - buy
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+      - URLEVENT=http://event:3002/event/
+      - URLBUY=http://buy:3003/buy/
+      - URLUSER=http://users:3001/users/
+      - SECRET=TESTTEST
+
+  users:
+    container_name: users
+    build: ./users
+    restart: always
+    ports:
+      - "3001:3001"
+    links:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+
+  mongo:
+    image: mongo:4.0
+    volumes:
+      - "./mongo/data:/data/db"
+    ports:
+      - "27017:27017"
