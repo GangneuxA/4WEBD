@@ -15,11 +15,11 @@ exports.index = async (req, res) => {
 
   try {
     const response = await fetch(
-      `${URLUSER}`, //+
-      // new URLSearchParams({
-      //   perPage: parseInt(req.query.perPage) || 10,
-      //   page: parseInt(req.query.page) || 1,
-      // })
+      `${URLUSER}?` +
+        new URLSearchParams({
+          perPage: parseInt(req.query.perPage) || 10,
+          page: parseInt(req.query.page) || 1,
+        }),
       {
         method: "GET",
         headers: { Accept: "application/json" },

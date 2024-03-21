@@ -7,11 +7,11 @@ const RABBIT = process.env.RABBIT;
 exports.index = async (req, res) => {
   try {
     const response = await fetch(
-      `${URLBUY}`, //+
-      // new URLSearchParams({
-      //   perPage: parseInt(req.query.perPage) || 10,
-      //   page: parseInt(req.query.page) || 1,
-      // })
+      `${URLBUY}?` +
+        new URLSearchParams({
+          perPage: parseInt(req.query.perPage) || 10,
+          page: parseInt(req.query.page) || 1,
+        }),
       {
         method: "GET",
         headers: { Accept: "application/json" },

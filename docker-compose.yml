@@ -5,23 +5,31 @@ services:
     container_name: buy
     build: ./buy
     restart: always
-    ports:
-      - "3003:3003"
     links:
-      - mongo
+      - mongobuy
     environment:
-      - MONGO_URL=mongodb://mongo:27017/buy
+      - MONGO_URL=mongodb://mongobuy:27017/buy
+
+  mongobuy:
+    image: mongo:4.0
+    restart: always
+    volumes:
+      - "./mongo/data:/data/dbbuy"
 
   event:
     container_name: event
     build: ./event
     restart: always
-    ports:
-      - "3002:3002"
     links:
-      - mongo
+      - mongoevent
     environment:
-      - MONGO_URL=mongodb://mongo:27017/event
+      - MONGO_URL=mongodb://mongoevent:27017/event
+
+  mongoevent:
+    image: mongo:4.0
+    restart: always
+    volumes:
+      - "./mongo/data:/data/dbevent"
 
   ftapi:
     container_name: ftapi
@@ -30,7 +38,6 @@ services:
     ports:
       - "3000:3000"
     links:
-      - mongo
       - users
       - event
       - buy
@@ -46,12 +53,16 @@ services:
     container_name: users
     build: ./users
     restart: always
-    ports:
-      - "3001:3001"
     links:
-      - mongo
+      - mongouser
     environment:
-      - MONGO_URL=mongodb://mongo:27017/users
+      - MONGO_URL=mongodb://mongouser:27017/users
+
+  mongouser:
+    image: mongo:4.0
+    restart: always
+    volumes:
+      - "./mongo/data:/data/dbuser"
 
   notification:
     container_name: notification
@@ -61,14 +72,6 @@ services:
       - rabbitmq
     environment:
       - RABBIT=amqp://rabbitmq
-
-  mongo:
-    image: mongo:4.0
-    restart: always
-    volumes:
-      - "./mongo/data:/data/db"
-    ports:
-      - "27017:27017"
 
   rabbitmq:
     container_name: rabbitmq
