@@ -72,7 +72,7 @@ exports.update = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { email, firstname, lastname, password },
-      { new: true }
+      { new: true, omitUndefined: true }
     );
     if (!updatedUser) {
       return res.status(404).send({

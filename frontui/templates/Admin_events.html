@@ -10,8 +10,9 @@ content %}
       <div class="content">
         <a class="header">{{ event.name }}</a>
         <div class="description">
-          <p>{{ event.dispo }}</p>
-          <p>{{ event.desc }}</p>
+          <p>Number available : {{ event.numberDispo }}</p>
+          <p>Price: {{ event.price }}</p>
+          <p>Description: {{ event.desc }}</p>
         </div>
 
         <form action="/change_event" method="get" style="display: inline">
@@ -36,7 +37,7 @@ content %}
     name="create_event"
     class="ui button"
   >
-    Create New Hotel
+    Create New Event
   </button>
 </div>
 

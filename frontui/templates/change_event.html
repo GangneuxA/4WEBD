@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %}Change Event{% endblock %} {% block
 content %}
 
-<form class="ui form" action="/change_hotel" method="post">
+<form class="ui form" action="/change_event" method="post">
   <div class="field">
     <label>Name</label>
     <input type="text" name="name" placeholder="" />
@@ -12,7 +12,11 @@ content %}
   </div>
   <div class="field">
     <label>price</label>
-    <input type="number" name="location" placeholder="" />
+    <input type="number" name="price" placeholder="" />
+  </div>
+  <div class="field">
+    <label>price</label>
+    <input type="number" name="count" placeholder="" />
   </div>
   <input type="hidden" name="event_id" value="{{event_id}}" />
   <button class="ui button" name="submit" type="submit">Submit</button>

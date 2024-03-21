@@ -71,21 +71,17 @@ exports.update = async (req, res) => {
   const { name, desc, numberDispo, price } = req.body;
 
   try {
-    const event = await Event.findById(id);
-
-    if (!event) {
+    const updatedEvent = await Event.findByIdAndUpdate(
+      id,
+      { name, desc, numberDispo, price },
+      { new: true, omitUndefined: true }
+    );
+    if (!updatedEvent) {
       return res.status(404).send({
         status: "Error",
         message: `No event found with id: ${id}`,
       });
     }
-
-    event.name = name;
-    event.desc = desc;
-    event.numberDispo = numberDispo;
-    event.price = price;
-    const updatedEvent = await event.save();
-
     res.status(200).send({
       status: "Success",
       message: "Event updated successfully",

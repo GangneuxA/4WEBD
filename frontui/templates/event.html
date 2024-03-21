@@ -1,24 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %}Hotel{% endblock %} {% block content
+%}
 
-{% block title %}Hotel{% endblock %}
-
-{% block content %}
-
-    <form class="ui form" action="/hotel" method="post">
-        <div class="field">
-          <label>name</label>
-          <input type="text" name="name" placeholder="name">
-        </div>
-        <div class="field">
-            <label>description</label>
-            <input type="text" name="description" placeholder="description">
-        </div>
-        <div class="field">
-            <label>location</label>
-            <input type="text" name="location" placeholder="location">
-        </div>
-        <button class="ui button" name="submit" type="submit">Submit</button>
-    </form>
+<form class="ui form" action="/event" method="post">
+  <div class="field">
+    <label>name</label>
+    <input type="text" name="name" placeholder="name" />
+  </div>
+  <div class="field">
+    <label>description</label>
+    <input type="text" name="description" placeholder="description" />
+  </div>
+  <div class="field">
+    <label>number available</label>
+    <input type="number" name="count" placeholder="100" />
+  </div>
+  <div class="field">
+    <label>price</label>
+    <input type="number" name="price" placeholder="40" />
+  </div>
+  <button class="ui button" name="submit" type="submit">Submit</button>
+</form>
 
 {% endblock %}
-  
