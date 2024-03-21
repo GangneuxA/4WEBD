@@ -7,7 +7,7 @@ const EventControllers = require("../controllers/EventControllers");
  
 router.get('/',auth, userControllers.index);
 
-router.get("/:id", userControllers.findById);
+router.get("/:id", auth, userControllers.findById);
  
 router.post('/', userControllers.insert);
  

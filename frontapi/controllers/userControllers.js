@@ -39,6 +39,15 @@ exports.index = async (req, res) => {
 
 exports.findById = async (req, res) => {
   const id = req.params.id;
+  // A user can only see themselves, unless they're an admin.
+  // Send a 404 to avoid revealing the requested user's existence.
+  if (id !== req.auth.user._id && req.auth.user.role !== "admin") {
+    return res.status(404).send({
+      status: "Error",
+      message: "User not found.",
+    });
+  }
+
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   try {
     const response = await fetch(`${URLUSER}${id}`, {
