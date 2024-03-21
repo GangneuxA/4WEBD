@@ -5,6 +5,8 @@ services:
     container_name: buy
     build: ./buy
     restart: always
+    ports:
+      - "3003:3003"
     links:
       - mongobuy
     environment:
