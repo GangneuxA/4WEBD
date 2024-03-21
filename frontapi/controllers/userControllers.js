@@ -5,6 +5,14 @@ const fetch = require("node-fetch");
 const URLUSER = process.env.URLUSER;
 
 exports.index = async (req, res) => {
+  // check if user has "admin" role, else send 403
+  if (req.auth.user.role !== "admin") {
+    return res.status(403).send({
+      status: "Error",
+      message: "Permission denied. You must be an administrator.",
+    });
+  }
+
   try {
     const response = await fetch(
       `${URLUSER}`, //+
