@@ -59,6 +59,14 @@ exports.findById = async (req, res) => {
 };
 
 exports.insert = async (req, res) => {
+  // Only administrators can create events
+  if (req.auth.user.role !== "admin") {
+    return res.status(403).send({
+      status: "Error",
+      message: "Permission denied. You must be an administrator.",
+    });
+  }
+
   const { name, desc, numberDispo, price } = req.body;
   try {
     const message = {
@@ -91,6 +99,15 @@ exports.insert = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  // Only administrators can update events
+  if (req.auth.user.role !== "admin") {
+    return res.status(403).send({
+      status: "Error",
+      message: "Permission denied. You must be an administrator.",
+    });
+  }
+
+
   const { name, desc, numberDispo, price } = req.body;
   const id = req.params.id;
   try {
@@ -124,6 +141,14 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  // Only administrators can delete events
+  if (req.auth.user.role !== "admin") {
+    return res.status(403).send({
+      status: "Error",
+      message: "Permission denied. You must be an administrator.",
+    });
+  }
+
   const id = req.params.id;
 
   try {
