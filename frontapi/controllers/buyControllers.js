@@ -1,7 +1,8 @@
-const ObjectID = require("mongoose").Types.ObjectId;
 const fetch = require("node-fetch");
+const amqp = require("amqplib");
 
 const URLBUY = process.env.URLBUY;
+const RABBIT = process.env.RABBIT;
 
 exports.index = async (req, res) => {
   try {
@@ -37,19 +38,18 @@ exports.insert = async (req, res) => {
     const { eventid, count } = req.body;
     const id = req.auth.user._id;
 
-    // const message = {
-    //   userId: jsonDatato.user,
-    //   title: `M/Mme vous avez recu  ${jsonDatato}`,
-    //   message: `M/Mme vous avez recu  ${jsonDatato}`,
-    // };
+    const connection = await amqp.connect(RABBIT);
+    const channel = await connection.createChannel();
+    const queueName = "mail";
 
-    // fetch(URLNOFTIF, {
-    //   method: "POST",
-    //   body: JSON.stringify(message),
-    //   headers: { "Content-Type": "application/json" },
-    // })
-    //   .then((response) => console.log(response))
-    //   .catch((err) => console.error(err));
+    const message = { data: "vous avez acheter vos billet" };
+    await channel.assertQueue(queueName, { durable: false });
+    await channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
+
+    console.log("Message envoyé à la file d'attente RabbitMQ");
+
+    await channel.close();
+    await connection.close();
 
     const buybody = {
       event: eventid,

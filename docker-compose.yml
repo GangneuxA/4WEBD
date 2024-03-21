@@ -10,7 +10,7 @@ services:
     links:
       - mongo
     environment:
-      - MONGO_URL=mongodb://mongo:27017/mydb
+      - MONGO_URL=mongodb://mongo:27017/buy
 
   event:
     container_name: event
@@ -21,7 +21,7 @@ services:
     links:
       - mongo
     environment:
-      - MONGO_URL=mongodb://mongo:27017/mydb
+      - MONGO_URL=mongodb://mongo:27017/event
 
   ftapi:
     container_name: ftapi
@@ -34,8 +34,9 @@ services:
       - users
       - event
       - buy
+      - rabbitmq
     environment:
-      - MONGO_URL=mongodb://mongo:27017/mydb
+      - RABBIT=amqp://rabbitmq
       - URLEVENT=http://event:3002/event/
       - URLBUY=http://buy:3003/buy/
       - URLUSER=http://users:3001/users/
@@ -50,11 +51,29 @@ services:
     links:
       - mongo
     environment:
-      - MONGO_URL=mongodb://mongo:27017/mydb
+      - MONGO_URL=mongodb://mongo:27017/users
+
+  notification:
+    container_name: notification
+    build: ./notification
+    restart: always
+    links:
+      - rabbitmq
+    environment:
+      - RABBIT=amqp://rabbitmq
 
   mongo:
     image: mongo:4.0
+    restart: always
     volumes:
       - "./mongo/data:/data/db"
     ports:
       - "27017:27017"
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.11-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"

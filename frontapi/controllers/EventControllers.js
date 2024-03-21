@@ -1,4 +1,3 @@
-const ObjectID = require("mongoose").Types.ObjectId;
 const fetch = require("node-fetch");
 
 const URLEVENT = process.env.URLEVENT;
