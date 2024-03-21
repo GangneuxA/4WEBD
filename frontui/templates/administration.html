@@ -1,47 +1,9 @@
-{% extends 'base.html' %}
-
-{% block title %}Administration{% endblock %}
-
-{% block content %}
-
-{% if session["role"] == "employee" %}
-    <div class="ui container">
-        <h1>List of Users</h1>
-        <table class="ui celled table">
-            <thead>
-                <tr>
-                    <th>Pseudo</th>
-                    <th>Email</th>
-                    <th>Rôle</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.pseudo }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.role }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <div class="ui container">
-        <h1>Administration Page</h1>
-        <div class="ui buttons">
-            <a class="ui button" name="admin_hotels" href="/admin_hotels">Hôtels</a>
-        </div>
-        <div class="ui buttons">
-            <a class="ui button" name="admin_bookings" href="/admin_bookings">Booking</a>
-        </div>
-        <div class="ui buttons">
-            <a class="ui button" name="admin_images" href="/images">Images</a>
-        </div>
-        <div class="ui buttons">
-            <a class="ui button" name="admin_rooms" href="/rooms">Rooms</a>
-        </div>
-    </div>
-{% endif %}
-
-{% endblock %}
+{% extends 'base.html' %} {% block title %}Administration{% endblock %} {% block
+content %}
+<div class="ui container">
+  <h1>Administration Page</h1>
+  <div class="ui buttons">
+    <a class="ui button" name="admin_hotels" href="/admin_event">Hôtels</a>
+  </div>
+</div>
+{% endif %} {% endblock %}

@@ -1,46 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="ui menu">
-        <a class="header item" name="home" href="/home">
-          Home
-        </a>
-        <a class="item" name="profil" href="/user">
-          Profil
-        </a>
-        <a class="item" name="reservations" href="/booking">
-          my reservations
-        </a>
-        {% if session["role"] == "employee" or session["role"] == "admin" %}
-        <a class="item" name="administration" href="/administration">
-          Administration
-        </a>
-        {% endif %}
-        <div class="right menu">
-            <div class="item">
-                <div class="ui buttons">
-                  {% if session['authenticated'] == True %}
-                  <form class="ui form" action="/logout" name="logout" method="post">
-                    <button type="submit" class="ui red button">Logout</button>
-                  </form>
-                  {% else %}
-                  <button onclick="window.location.href = '/login'" class="ui positive button" name="login">Login</button>
-                  <div class="or"></div>
-                  <button onclick="window.location.href = '/register'" class="ui button" name="register">Register</button>
-                  {% endif %}
-                </div>
-            </div>
+      <a class="header item" name="home" href="/home"> Home </a>
+      <a class="item" name="profil" href="/user"> Profil </a>
+      <a class="item" name="reservations" href="/buying"> my buying </a>
+      {% if session["role"] == "admin" %}
+      <a class="item" name="administration" href="/administration">
+        Administration
+      </a>
+      {% endif %}
+      <div class="right menu">
+        <div class="item">
+          <div class="ui buttons">
+            {% if session['authenticated'] == True %}
+            <form class="ui form" action="/logout" name="logout" method="post">
+              <button type="submit" class="ui red button">Logout</button>
+            </form>
+            {% else %}
+            <button
+              onclick="window.location.href = '/login'"
+              class="ui positive button"
+              name="login"
+            >
+              Login
+            </button>
+            <div class="or"></div>
+            <button
+              onclick="window.location.href = '/register'"
+              class="ui button"
+              name="register"
+            >
+              Register
+            </button>
+            {% endif %}
+          </div>
         </div>
+      </div>
     </div>
-    <div>
-        {% block content %}{% endblock %}
-    </div>
-</body>
+    <div>{% block content %}{% endblock %}</div>
+  </body>
 </html>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.css">
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.css"
+/>
 <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>

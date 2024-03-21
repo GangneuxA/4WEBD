@@ -65,6 +65,8 @@ services:
     restart: always
     volumes:
       - "./mongo/data:/data/dbuser"
+    ports:
+      - "27017:27017"
 
   notification:
     container_name: notification

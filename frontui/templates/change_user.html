@@ -1,24 +1,39 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %}Change User{% endblock %} {% block
+content %}
 
-{% block title %}Change User{% endblock %}
-
-{% block content %}
-
-    <form class="ui form" action="/change_user" method="post">
-        <div class="field">
-          <label>Pseudo</label>
-          <input type="text" name="pseudo" placeholder="Pseudo" value="{{session.pseudo}}">
-        </div>
-        <div class="field">
-            <label>email</label>
-            <input type="email" name="email" placeholder="example.example@example.fr" value="{{session.email}}">
-          </div>
-        <div class="field">
-          <label>Password</label>
-          <input type="password" name="password" placeholder="password">
-        </div>
-        <button class="ui button" name="submit" type="submit">Submit</button>
-    </form>
+<form class="ui form" action="/change_user" method="post">
+  <div class="field">
+    <label>firstname</label>
+    <input
+      type="text"
+      name="firstname"
+      placeholder="firstname"
+      value="{{session.firstname}}"
+    />
+  </div>
+  <div class="field">
+    <label>lastname</label>
+    <input
+      type="text"
+      name="lastname"
+      placeholder="lastname"
+      value="{{session.lastname}}"
+    />
+  </div>
+  <div class="field">
+    <label>email</label>
+    <input
+      type="email"
+      name="email"
+      placeholder="example.example@example.fr"
+      value="{{session.email}}"
+    />
+  </div>
+  <div class="field">
+    <label>Password</label>
+    <input type="password" name="password" placeholder="password" />
+  </div>
+  <button class="ui button" name="submit" type="submit">Submit</button>
+</form>
 
 {% endblock %}
-  

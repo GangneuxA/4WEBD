@@ -34,9 +34,9 @@ def home():
     if request.method == "POST":
         try:
             if session["authenticated"]:
-                room_id = request.form.get("room_id")
+                event_id = request.form.get("event_id")
 
-                return render_template("booking.html", room_id=room_id)
+                return render_template("buy.html", event_id=event_id)
         except:
             return redirect(url_for("login"))
 
@@ -103,7 +103,7 @@ def user():
     if request.method == "GET":
         try:
             if session["authenticated"]:
-                url = URL + "user"
+                url = URL + "users/" + str(session["id"])
 
                 HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
@@ -126,18 +126,18 @@ def change_user():
     if request.method == "POST":
 
         body = {}
-        body.update({"pseudo": request.form.get("pseudo")})
         body.update({"email": request.form.get("email")})
+        body.update({"firstname": request.form.get("firstname")})
+        body.update({"lastname": request.form.get("lastname")})
         if request.form.get("password") != None:
             body.update({"password": request.form.get("password")})
-        url = URL + "user/" + str(session["id"])
+        url = URL + "users/"
 
         HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
         response = requests.put(url=url, json=body, headers=HEADERS)
 
         session["email"] = request.form.get("email")
-        session["pseudo"] = request.form.get("pseudo")
 
         return redirect(url_for("user"))
 
@@ -159,7 +159,7 @@ def delete_user():
 def administration():
     if request.method == "GET":
 
-        url = URL + "user"
+        url = URL + "users"
 
         HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
@@ -173,27 +173,25 @@ def administration():
 
 
 @app.route("/buy", methods=["GET", "POST"])
-def booking():
+def buy():
     if request.method == "POST":
 
         url = URL + "buy"
 
         body = {}
-        body.update({"chambre_id": request.form.get("room_id")})
-        body.update({"user_id": session["id"]})
-        body.update({"datein": request.form.get("datein")})
-        body.update({"dateout": request.form.get("dateout")})
+        body.update({"eventid": request.form.get("eventid")})
+        body.update({"count": request.form.get("count")})
 
         HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
         response = requests.post(url=url, json=body, headers=HEADERS)
 
-        return redirect(url_for("booking"))
+        return redirect(url_for("buy"))
 
     if request.method == "GET":
         try:
             if session["authenticated"] == True:
-                url = URL + "booking"
+                url = URL + "buy/" + session["id"]
 
                 HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
@@ -210,96 +208,52 @@ def booking():
             return render_template("login.html")
 
 
-@app.route("/change_booking", methods=["GET", "POST"])
-def change_booking():
-
+@app.route("/admin_event", methods=["GET", "POST"])
+def admin_event():
     if request.method == "GET":
 
-        reservation = json.loads(request.args.get("booking").replace("'", '"'))
-
-        return render_template("change_booking.html", reservation=reservation)
-    if request.method == "POST":
-
-        body = {}
-        if request.form.get("datein") != "":
-            body.update({"datein": request.form.get("datein")})
-        if request.form.get("dateout") != "":
-            body.update({"dateout": request.form.get("dateout")})
-
-        url = URL + "booking/" + request.form.get("booking_id")
-
-        print(request.form.get("booking_id"))
-
-        HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
-
-        response = requests.put(url=url, json=body, headers=HEADERS)
-        print("######")
-
-        if session["role"] == "admin":
-            return redirect(url_for("admin_bookings"))
-        return redirect(url_for("booking"))
-
-
-@app.route("/delete_booking", methods=["POST"])
-def delete_booking():
-    if request.method == "POST":
-
-        url = URL + "booking/" + request.form.get("booking_id")
-
-        HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
-
-        response = requests.delete(url=url, headers=HEADERS)
-
-        if session["role"] == "admin":
-            return redirect(url_for("admin_bookings"))
-        return redirect(url_for("booking"))
-
-
-@app.route("/admin_hotels", methods=["GET", "POST"])
-def admin_hotels():
-    if request.method == "GET":
-
-        url = URL + "hotel"
+        url = URL + "event"
 
         response = requests.get(url=url, headers=HEADERS)
-        hotels = response.json()
+        events = response.json()
 
-        return render_template("Admin_hotels.html", hotels=hotels)
+        return render_template("Admin_events.html", events=events)
 
 
-@app.route("/hotel", methods=["GET", "POST"])
-def hotel():
+@app.route("/event", methods=["GET", "POST"])
+def event():
     if request.method == "GET":
-        return render_template("hotel.html")
+        return render_template("event.html")
     if request.method == "POST":
 
-        url = URL + "hotel"
+        url = URL + "event"
 
         HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
         body = {
             "name": request.form.get("name"),
-            "description": request.form.get("description"),
-            "location": request.form.get("location"),
+            "desc": request.form.get("description"),
+            "price": request.form.get("price"),
+            "numberDispo": request.form.get("numberDispo"),
         }
 
         response = requests.post(url=url, json=body, headers=HEADERS)
 
         if response.status_code == 201:
-            return redirect(url_for("admin_hotels"))
+            return redirect(url_for("admin_event"))
         else:
             return redirect(url_for("error"))
 
 
-@app.route("/change_hotel", methods=["GET", "POST"])
-def change_hotel():
+@app.route("/change_event", methods=["GET", "POST"])
+def change_event():
     if request.method == "GET":
         return render_template(
-            "change_hotel.html", hotel_id=request.args.get("hotel_id")
+            "change_event.html", event_id=request.args.get("event_id")
         )
     if request.method == "POST":
 
-        url = URL + "hotel/" + request.form.get("hotel_id")
+        url = URL + "event/" + request.form.get("event_id")
 
         HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
@@ -307,177 +261,23 @@ def change_hotel():
         if request.form.get("name") != "":
             body.update({"name": request.form.get("name")})
         if request.form.get("description") != "":
-            body.update({"description": request.form.get("description")})
-        if request.form.get("location") != "":
-            body.update({"location": request.form.get("location")})
+            body.update({"desc": request.form.get("description")})
+        if request.form.get("price") != "":
+            body.update({"price": request.form.get("price")})
 
         response = requests.put(url=url, json=body, headers=HEADERS)
 
-        return redirect(url_for("admin_hotels"))
+        return redirect(url_for("admin_event"))
 
 
-@app.route("/delete_hotel", methods=["POST"])
-def delete_hotel():
+@app.route("/delete_event", methods=["POST"])
+def delete_event():
     if request.method == "POST":
 
-        url = URL + "hotel/" + request.form.get("hotel_id")
+        url = URL + "event/" + request.form.get("event_id")
 
         HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
 
         response = requests.delete(url=url, headers=HEADERS)
 
-        return redirect(url_for("admin_hotels"))
-
-
-@app.route("/admin_bookings", methods=["GET"])
-def admin_bookings():
-    if request.method == "GET":
-
-        url = URL + "booking"
-
-        HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
-
-        response = requests.get(url=url, headers=HEADERS)
-        reservations = response.json()
-
-        return render_template("Admin_bookings.html", reservations=reservations)
-
-
-@app.route("/images", methods=["GET", "POST"])
-def images():
-    if request.method == "GET":
-
-        url = URL + "hotel"
-
-        response = requests.get(url=url, headers=HEADERS)
-        hotels = response.json()
-
-        for hotel in hotels:
-
-            url = URL + "image/" + str(hotel["id"])
-            response = requests.get(url=url, headers=HEADERS)
-
-            hotel["image"] = response.json()
-
-        return render_template("images.html", hotels=hotels)
-
-    if request.method == "POST":
-        url = URL + "image"
-
-        body = {}
-        file = request.files["image"]
-        image_name = file.filename
-        files = {"image": (image_name, file.read())}
-        body.update({"hotel_id": request.form.get("hotel_id")})
-
-        headers = {}
-        headers.update({"Authorization": "Bearer " + session["access_token"]})
-        headers.update({"accept": "*/*"})
-
-        print(url)
-        print(headers)
-
-        response = requests.post(url=url, data=body, files=files, headers=headers)
-
-        return redirect(url_for("images"))
-
-
-@app.route("/delete_image", methods=["POST"])
-def delete_image():
-    if request.method == "POST":
-
-        url = (
-            URL
-            + "image/"
-            + request.form.get("hotel_id")
-            + "/"
-            + request.form.get("image_id")
-        )
-
-        HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
-
-        response = requests.delete(url=url, headers=HEADERS)
-
-        return redirect(url_for("images"))
-
-
-@app.route("/rooms", methods=["GET", "POST"])
-def rooms():
-    if request.method == "GET":
-
-        url = URL + "chambres"
-
-        response = requests.get(url=url, headers=HEADERS)
-        rooms = response.json()
-
-        url = URL + "hotel"
-
-        response = requests.get(url=url, headers=HEADERS)
-        hotels = response.json()
-
-        return render_template("Admin_rooms.html", rooms=rooms, hotels=hotels)
-
-    if request.method == "POST":
-
-        url = URL + "chambres"
-
-        HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
-
-        body = {
-            "numero": request.form.get("numero"),
-            "nb_personne": request.form.get("nb_personne"),
-            "hotel_id": request.form.get("hotel_id"),
-        }
-
-        response = requests.post(url=url, json=body, headers=HEADERS)
-
-        if response.status_code == 201:
-            return redirect(url_for("rooms"))
-        else:
-            return redirect(url_for("error"))
-
-
-@app.route("/change_room", methods=["GET", "POST"])
-def change_room():
-    if request.method == "GET":
-        return render_template("change_room.html", room_id=request.args.get("room_id"))
-    if request.method == "POST":
-
-        url = URL + "chambres/" + request.form.get("room_id")
-
-        HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
-
-        body = {}
-        if request.form.get("number") != "":
-            body.update({"number": str(request.form.get("number"))})
-        if request.form.get("nb_personne") != "":
-            body.update({"nb_personne": int(request.form.get("nb_personne"))})
-
-        print(body)
-        response = requests.put(url=url, json=body, headers=HEADERS)
-
-        return redirect(url_for("rooms"))
-
-
-@app.route("/delete_room", methods=["POST"])
-def delete_room():
-    if request.method == "POST":
-
-        url = URL + "chambres/" + request.form.get("room_id")
-
-        HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
-
-        response = requests.delete(url=url, headers=HEADERS)
-
-        return redirect(url_for("rooms"))
-
-
-@app.route("/create_room", methods=["GET"])
-def create_room():
-    if request.method == "GET":
-        hotel_id = request.args.get("hotel_id")
-        return render_template("room.html", hotel_id=hotel_id)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", threaded=True)
+        return redirect(url_for("admin_event"))

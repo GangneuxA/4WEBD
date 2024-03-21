@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block title %}buy{% endblock %} {% block content %}
+
+<div class="ui container">
+  <h1>For event :{{ event_id }}</h1>
+  <form class="ui form" action="/buy" method="post">
+    <div class="field">
+      <label>count</label>
+      <input type="number" name="count" placeholder="1" />
+    </div>
+    <input type="hidden" name="eventid" value="{{ event_id }}" />
+    <button class="ui button primary" name="submit" type="submit">
+      Booking
+    </button>
+  </form>
+</div>
+{% endblock %}

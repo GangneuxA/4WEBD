@@ -1,37 +1,25 @@
-{% extends 'base.html' %}
-
-{% block title %}Reservations{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Buy{% endblock %} {% block
+content %}
 
 <div class="ui container">
-    <h1>My reservation</h1>
-    
-    <div name="booking_list" class="ui celled list">
-        <!-- Utilisez une boucle pour générer les éléments pour chaque réservation -->
-        {% for reservation in reservations %}
-            <div class="item">
-                <div class="content">
-                    <div class="header">Reservation room : {{ reservation.chambre_id }}</div>
-                    <div class="description">
-                        <p name="datein">Date in :  {{ reservation.datein }}</p>
-                        <p name="dateout">Date Out :  {{ reservation.dateout }}</p>
-                        <p name="email">Email :  {{ session.email }}</p>
-                    </div>
-                    <div class="extra">
-                        <form class="ui form" action="/change_booking" method="get">
-                            <input type="hidden" name="booking" value="{{ reservation }}">
-                            <button type="submit" name="modified" class="ui primary button">modified</button>
-                        </form>
-                        <form class="ui form" action="/delete_booking" method="post">
-                            <input type="hidden" name="booking_id" value="{{ reservation.id }}">
-                            <button type="submit" name="delete" class="ui negative button">Delete</button>
-                        </form>
-                    </div>
-                </div>
+  <h1>My Buying</h1>
+
+  <div name="buy_list" class="ui celled list">
+    <!-- Utilisez une boucle pour générer les éléments pour chaque réservation -->
+    {% for reservation in reservations %}
+    <div class="item">
+      <div class="content">
+        <div class="header">Reservation number: {{ reservation._id }}</div>
+            <div class="description">
+            <p name="event">Event id : {{ reservation.event }}</p>
+            <p name="count">Count : {{ reservation.count }}</p>
+            <p name="at">At : {{ reservation.At }}</p>
             </div>
-        {% endfor %}
+        </div>
+      </div>
     </div>
+    {% endfor %}
+  </div>
 </div>
 
 {% endblock %}
