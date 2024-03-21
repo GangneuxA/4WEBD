@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% block title %}Register{% endblock %} {% block
+content %}
+
+<form class="ui form" action="/register" method="post">
+  <div class="field">
+    <label>firstname</label>
+    <input type="text" name="firstname" placeholder="jean" />
+  </div>
+  <div class="field">
+    <label>lastname</label>
+    <input type="text" name="lastname" placeholder="benoit" />
+  </div>
+  <div class="field">
+    <label>email</label>
+    <input type="email" name="email" placeholder="example.example@example.fr" />
+  </div>
+  <div class="field">
+    <label>Password</label>
+    <input type="password" name="password" placeholder="password" />
+  </div>
+  <div class="field">
+    <label>Confirm_Password</label>
+    <input
+      type="password"
+      name="confirm_password"
+      placeholder="confirm_password"
+    />
+  </div>
+  <div class="field">
+    <div class="ui toggle checkbox">
+      <input type="checkbox" name="example" />
+      <label>I agree to the Terms and Conditions</label>
+    </div>
+  </div>
+  <button class="ui button" name="submit" type="submit">Submit</button>
+</form>
+
+{% endblock %}

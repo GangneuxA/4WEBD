@@ -29,6 +29,20 @@ exports.index = async (req, res) => {
   }
 };
 
+exports.findByUserId = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const buy = await Buy.find({ user: id });
+    res.status(200).send(buy);
+  } catch (error) {
+    res.status(500).send({
+      status: "Error",
+      message: "An error occurred while fetching accounts",
+      error: error.message,
+    });
+  }
+};
+
 exports.insert = async (req, res) => {
   try {
     const { user, event, count } = req.body;

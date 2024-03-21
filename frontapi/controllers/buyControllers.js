@@ -33,6 +33,28 @@ exports.index = async (req, res) => {
   }
 };
 
+exports.findByUserId = async (req, res) => {
+  const id = req.auth.user._id;
+  try {
+    const response = await fetch(`${URLBUY}${id}`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const jsonData = await response.json();
+
+    res.status(200).send(jsonData);
+  } catch (error) {
+    res.status(500).send({
+      status: "Error",
+      message: "An error occurred while fetching transfers",
+      error: error.message,
+    });
+  }
+};
 exports.insert = async (req, res) => {
   try {
     const { eventid, count } = req.body;
