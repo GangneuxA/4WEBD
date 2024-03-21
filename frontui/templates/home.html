@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block content
+%}
+
+<div class="ui container">
+  <h1>Liste des Hôtels</h1>
+  <div class="ui divided items">
+    {% for event in events %}
+    <div class="item">
+      <div class="content">
+        <a class="header">{{ event.name }}</a>
+        <div class="meta">
+          <span>Nombre disponlibe :{{ event.numberDispo }}</span>
+        </div>
+        <div class="description">
+          <p>{{ event.desc }}</p>
+        </div>
+        <div class="price">
+          <p>price :{{ event.price }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

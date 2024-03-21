@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Images{% endblock %}
+
+{% block content %}
+
+<div class="ui container">
+    <h1>Liste des Hôtels</h1>
+    <div class="ui divided items">
+        {% for hotel in hotels %}
+            <div class="item">
+                <div class="content">
+                    <a class="header">{{ hotel.name }}</a>
+                </div>
+                {% for data in hotel['image'] %}
+                    <div class="image">
+                        <img class="ui image" style="width: 200px; height: 150px;" src="data:image/jpeg;base64,{{ data['data'] }}" alt="">
+                    </div>
+                    <div class="ui form">
+                        <form action="/delete_image" method="post">
+                            <input type="hidden" name="hotel_id" value="{{ hotel.id }}">
+                            <input type="hidden" name="image_id" value="{{ data['id'] }}">
+                            <button class="ui red button" name="submit_delete" type="submit">delete</button>
+                        </form>
+                    </div>
+                {% endfor %}                    
+                <div class="ui form">
+                    <form action="/images" method="post" enctype="multipart/form-data">
+                        <input type="file" name="image" accept="image/*" required>
+                        <input type="hidden" name="hotel_id" value="{{ hotel.id }}">
+                        <button class="ui primary button" name="submit_add" type="submit">Add image</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
