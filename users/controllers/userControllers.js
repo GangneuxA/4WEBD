@@ -49,32 +49,6 @@ exports.searchById = async (req, res) => {
   }
 };
 
-exports.searchByEmail = async (req, res) => {
-  const email = req.params.email; // Supposons que l'e-mail est passé en tant que paramètre dans l'URL
-
-  try {
-    const user = await User.findOne({ email: email });
-
-    if (!user) {
-      return res.status(404).send({
-        status: "Error",
-        message: `No user found with email: ${email}`,
-      });
-    }
-
-    res.status(200).send({
-      status: "Success",
-      user: user,
-    });
-  } catch (error) {
-    res.status(500).send({
-      status: "Error",
-      message: `An error occurred while searching for user with email: ${email}`,
-      error: error.message,
-    });
-  }
-};
-
 exports.insert = async (req, res) => {
   try {
     const { email, firstname, lastname, password } = req.body;
