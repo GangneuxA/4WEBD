@@ -6,6 +6,8 @@ const buyControllers = require("../controllers/buyControllers");
 
 router.get("/", auth, buyControllers.index);
 
+router.get("/:id", auth, buyControllers.findByUserId);
+
 router.post("/", auth, buyControllers.insert);
 
 module.exports = router;

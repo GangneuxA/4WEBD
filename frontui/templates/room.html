@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Rooms{% endblock %}
+
+{% block content %}
+
+    <form class="ui form" action="/rooms" method="post">
+        <div class="field">
+          <label>room number</label>
+          <input type="text" name="numero" placeholder="numero">
+        </div>
+        <div class="field">
+            <label>Number of people</label>
+            <input type="number" name="nb_personne" placeholder="2">
+        </div>
+        <input type="hidden" name="hotel_id" value="{{ hotel_id }}">
+        <button class="ui button" name="submit" type="submit">Submit</button>
+    </form>
+
+{% endblock %}
+  
