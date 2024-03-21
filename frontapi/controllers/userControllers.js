@@ -37,6 +37,40 @@ exports.index = async (req, res) => {
   }
 };
 
+exports.findById = async (req, res) => {
+  const id = req.params.id;
+  // A user can only see themselves, unless they're an admin.
+  // Send a 404 to avoid revealing the requested user's existence.
+  if (id !== req.auth.user._id && req.auth.user.role !== "admin") {
+    return res.status(404).send({
+      status: "Error",
+      message: "User not found.",
+    });
+  }
+
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  try {
+    const response = await fetch(`${URLUSER}${id}`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const jsonData = await response.json();
+
+    res.status(200).send(jsonData);
+  } catch (err) {
+    res.status(500).send({
+      status: "Error",
+      message: "An error occurred while fetching user",
+      error: err.message,
+    });
+  }
+}
+
 exports.insert = async (req, res) => {
   try {
     const { email, firstname, lastname, password } = req.body;
