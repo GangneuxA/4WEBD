@@ -59,6 +59,14 @@ exports.findById = async (req, res) => {
 };
 
 exports.insert = async (req, res) => {
+  // Only administrators can create events
+  if (req.auth.user.role !== "admin") {
+    return res.status(403).send({
+      status: "Error",
+      message: "Permission denied. You must be an administrator.",
+    });
+  }
+
   const { name, desc, numberDispo, price } = req.body;
   try {
     const message = {
