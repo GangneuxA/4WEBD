@@ -6,11 +6,11 @@ exports.index = async (req, res) => {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   try {
     const response = await fetch(
-      `${URLEVENT}`, //+
-      //   new URLSearchParams({
-      //     perPage: parseInt(req.query.perPage) || 10,
-      //     page: parseInt(req.query.page) || 1,
-      //   })
+      `${URLEVENT}?` +
+        new URLSearchParams({
+          perPage: parseInt(req.query.perPage) || 10,
+          page: parseInt(req.query.page) || 1,
+        }),
       {
         method: "GET",
         headers: { Accept: "application/json" },
@@ -23,7 +23,7 @@ exports.index = async (req, res) => {
 
     const jsonData = await response.json();
 
-    res.status(200).send({ jsonData });
+    res.status(200).send(jsonData);
   } catch (err) {
     res.status(500).send({
       status: "Error",
