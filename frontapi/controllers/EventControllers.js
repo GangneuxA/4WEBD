@@ -99,6 +99,15 @@ exports.insert = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  // Only administrators can update events
+  if (req.auth.user.role !== "admin") {
+    return res.status(403).send({
+      status: "Error",
+      message: "Permission denied. You must be an administrator.",
+    });
+  }
+
+
   const { name, desc, numberDispo, price } = req.body;
   const id = req.params.id;
   try {
