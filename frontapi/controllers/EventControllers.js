@@ -141,6 +141,14 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  // Only administrators can delete events
+  if (req.auth.user.role !== "admin") {
+    return res.status(403).send({
+      status: "Error",
+      message: "Permission denied. You must be an administrator.",
+    });
+  }
+
   const id = req.params.id;
 
   try {
