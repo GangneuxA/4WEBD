@@ -99,7 +99,7 @@ exports.delete = async (req, res) => {
     });
   }
   try {
-    const deletedUser = await User.findByIdAndRemove(id);
+    const deletedUser = await User.findByIdAndDelete(id);
     if (!deletedUser) {
       return res.status(404).send({
         status: "Error",

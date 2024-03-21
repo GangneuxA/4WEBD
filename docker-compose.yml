@@ -20,6 +20,8 @@ services:
     container_name: event
     build: ./event
     restart: always
+    ports:
+      - "3002:3002"
     links:
       - mongoevent
     environment:

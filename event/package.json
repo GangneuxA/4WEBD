@@ -18,6 +18,8 @@
     "mongoose": "^8.2.1",
     "morgan": "~1.9.1",
     "node-fetch": "^2.7.0",
-    "pug": "2.0.0-beta11"
+    "pug": "2.0.0-beta11",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   }
 }
