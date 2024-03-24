@@ -5,8 +5,8 @@ services:
     container_name: buy
     build: ./buy
     restart: always
-    # ports:
-    #   - "3003:3003"
+    ports:
+      - "3003:3003"
     links:
       - mongobuy
     environment:
@@ -22,8 +22,8 @@ services:
     container_name: event
     build: ./event
     restart: always
-    # ports:
-    #   - "3002:3002"
+    ports:
+      - "3002:3002"
     links:
       - mongoevent
     environment:
@@ -57,8 +57,8 @@ services:
     container_name: users
     build: ./users
     restart: always
-    # ports:
-    #   - "3001:3001"
+    ports:
+      - "3001:3001"
     links:
       - mongouser
     environment:
