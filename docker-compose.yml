@@ -35,12 +35,10 @@ services:
     volumes:
       - "./mongo/data:/data/dbevent"
 
-  ftapi:
-    container_name: ftapi
+  ftapi_1:
+    container_name: ftapi_1
     build: ./frontapi
     restart: always
-    ports:
-      - "3000:3000"
     links:
       - users
       - event
@@ -53,6 +51,21 @@ services:
       - URLUSER=http://users:3001/users/
       - SECRET=TESTTEST
 
+  ftapi_2:
+    container_name: ftapi_2
+    build: ./frontapi
+    restart: always
+    links:
+      - users
+      - event
+      - buy
+      - rabbitmq
+    environment:
+      - RABBIT=amqp://rabbitmq
+      - URLEVENT=http://event:3002/event/
+      - URLBUY=http://buy:3003/buy/
+      - URLUSER=http://users:3001/users/
+      - SECRET=TESTTEST
   users:
     container_name: users
     build: ./users
@@ -88,6 +101,13 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:8080"
+    links:
+      - ftapi_1
+      - ftapi_2
 
   ftui:
     build: ./frontui
@@ -101,6 +121,6 @@ services:
       FLASK_APP: "app.py"
       FLASK_ENV: "development"
       FLASK_RUN_PORT: "5000"
-      URL: "http://ftapi:3000/"
+      URL: "http://nginx:8080/"
     links:
-      - ftapi
+      - nginx
