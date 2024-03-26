@@ -34,6 +34,8 @@ const EventControllers = require("../controllers/EventControllers");
  * /event:
  *   get:
  *     summary: Récupérer la liste des événements
+ *     tags: 
+ *       - Event
  *     description: Récupère la liste des événements paginée.
  *     parameters:
  *       - in: query
@@ -91,6 +93,8 @@ router.get("/", EventControllers.index);
  * /event/{id}:
  *   get:
  *     summary: Récupérer un événement par ID
+ *     tags: 
+ *       - Event
  *     description: Récupère un événement par son ID.
  *     parameters:
  *       - in: path
@@ -141,7 +145,11 @@ router.get("/:id", EventControllers.findById);
  * @swagger
  * /event:
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Insérer un nouvel événement
+ *     tags: 
+ *       - Event
  *     description: Insère un nouvel événement avec les détails fournis.
  *     requestBody:
  *       required: true
@@ -197,7 +205,11 @@ router.post("/", auth, EventControllers.insert);
  * @swagger
  * /event/{id}:
  *   put:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Mettre à jour un événement
+ *     tags: 
+ *       - Event
  *     description: Met à jour les informations d'un événement existant avec les détails fournis.
  *     parameters:
  *       - in: path
@@ -276,7 +288,11 @@ router.put("/:id", auth, EventControllers.update);
  * @swagger
  * /event/{id}:
  *   delete:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Supprimer un événement
+ *     tags: 
+ *       - Event
  *     description: Supprime un événement existant avec l'ID spécifié.
  *     parameters:
  *       - in: path
