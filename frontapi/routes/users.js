@@ -30,7 +30,11 @@ const userControllers = require('../controllers/userControllers')
  * @swagger
  * /users:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Récupère la liste des utilisateurs paginée
+ *     tags: 
+ *       - users
  *     description: Récupère la liste des utilisateurs avec pagination.
  *     parameters:
  *       - in: query
@@ -83,7 +87,11 @@ router.get('/',auth, userControllers.index);
  * @swagger
  * /users/{id}/:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Récupérer un utilisateur par ID
+ *     tags: 
+ *       - users
  *     description: Récupère un utilisateur par son ID.
  *     parameters:
  *       - in: path
@@ -135,6 +143,8 @@ router.get("/:id", auth, userControllers.findById);
  * /users:
  *   post:
  *     summary: Insérer un nouvel utilisateur
+ *     tags: 
+ *       - users
  *     description: Insère un nouvel utilisateur avec les détails fournis.
  *     requestBody:
  *       required: true
@@ -185,7 +195,11 @@ router.post('/', userControllers.insert);
  * @swagger
  * /users/{id}/:
  *   put:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Mettre à jour un utilisateur
+ *     tags: 
+ *       - users
  *     description: Met à jour les informations d'un utilisateur existant avec les détails fournis.
  *     parameters:
  *       - in: path
@@ -251,7 +265,11 @@ router.put('/',auth, userControllers.update);
  * @swagger
  * /users/{id}/:
  *   delete:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Supprimer un utilisateur
+ *     tags: 
+ *       - users
  *     description: Supprime un utilisateur existant avec l'ID spécifié.
  *     parameters:
  *       - in: path

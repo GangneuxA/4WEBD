@@ -33,7 +33,11 @@ const buyControllers = require("../controllers/buyControllers");
  * @swagger
  * /buy:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Récupérer les achats
+ *     tags: 
+ *       - Buy
  *     description: Récupère une liste paginée des achats.
  *     parameters:
  *       - in: query
@@ -92,7 +96,11 @@ router.get("/", auth, buyControllers.index);
  * @swagger
  * /buy/{id}:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *     summary: Récupérer les achats par utilisateur
+ *     tags: 
+ *       - Buy
  *     description: Récupère les achats effectués par un utilisateur spécifié.
  *     parameters:
  *       - in: path
@@ -132,7 +140,11 @@ router.get("/:id", auth, buyControllers.findByUserId);
  * @swagger
  * /buy:
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Créer un nouvel achat
+ *     tags: 
+ *       - Buy
  *     description: Crée un nouvel achat avec les détails fournis.
  *     requestBody:
  *       required: true
