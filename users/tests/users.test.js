@@ -1,5 +1,4 @@
 require('dotenv').config()
-const request = require("supertest");
 const URLUSER = process.env.URLUSER;
 let userID = ''
 
@@ -75,7 +74,6 @@ describe('User Controller', () => {
         });
 
         userEmail = await response.json();
-        console.log(userEmail)
         userEmail = userEmail.email;
     
         expect(response.status).toBe(200);
