@@ -25,7 +25,7 @@ const buyControllers = require("../controllers/buyControllers");
  *         at:
  *           type: string
  *           description: .
- *   
+ *
  */
 
 /**
@@ -177,5 +177,8 @@ router.get("/:id", buyControllers.findByUserId);
  *                   type: string
  */
 router.post("/", buyControllers.insert);
+
+router.get("/event/:id", buyControllers.findByEventId);
+
 
 module.exports = router;

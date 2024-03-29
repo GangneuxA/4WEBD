@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const amqp = require("amqplib");
 
 const URLBUY = process.env.URLBUY;
+const URLEVENT = process.env.URLEVENT;
 const RABBIT = process.env.RABBIT;
 
 exports.index = async (req, res) => {
@@ -55,9 +56,34 @@ exports.findByUserId = async (req, res) => {
     });
   }
 };
+
 exports.insert = async (req, res) => {
   try {
     const { eventid, count } = req.body;
+
+    // Make sure the event has more than <count> tickets remaining
+    const eventResponse = await fetch(URLEVENT + eventid);
+    const event = await eventResponse.json();
+    const capacity = event.numberDispo;
+    const boughtResponse = await fetch(URLBUY + 'event/' + eventid);
+    const orders = await boughtResponse.json();
+    // TODO : Iterate over each "order" and add up all the counts
+    let bought = 0;
+    for (const order of orders) {
+      bought += order.count;
+    }
+    const remainingTickets = capacity - bought;
+
+    console.log(bought)
+    console.log(remainingTickets)
+
+    if (remainingTickets < count) {
+      return res.status(422).send({
+        status: "Error",
+        message: "This event doesn't have enough remaining tickets.",
+      });
+    }
+
     const id = req.auth.user._id;
 
     const connection = await amqp.connect(RABBIT);
