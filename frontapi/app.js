@@ -11,7 +11,43 @@ var buyRouter = require("./routes/buy");
 var eventRouter = require("./routes/Event");
 var loginRouter = require("./routes/login");
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API_Gateway',
+      version: '1.0.0',
+      description: 'api gateway',
+    },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        }
+      }
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000', 
+        description: 'Serveur local',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'], 
+  
+};
+
+const specs = swaggerJsdoc(options);
+
 var app = express();
+
+//swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

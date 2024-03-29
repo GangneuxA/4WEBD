@@ -72,7 +72,7 @@ exports.update = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { email, firstname, lastname, password },
-      { new: true }
+      { new: true, omitUndefined: true }
     );
     if (!updatedUser) {
       return res.status(404).send({
@@ -99,7 +99,7 @@ exports.delete = async (req, res) => {
     });
   }
   try {
-    const deletedUser = await User.findByIdAndRemove(id);
+    const deletedUser = await User.findByIdAndDelete(id);
     if (!deletedUser) {
       return res.status(404).send({
         status: "Error",

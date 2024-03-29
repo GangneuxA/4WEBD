@@ -1,0 +1,104 @@
+version: "3"
+
+services:
+  buy:
+    container_name: buy
+    build: ./buy
+    restart: always
+    ports:
+      - "3003:3003"
+    links:
+      - mongobuy
+    environment:
+      - MONGO_URL=mongodb://mongobuy:27017/buy
+
+  mongobuy:
+    image: mongo:4.0
+    restart: always
+    volumes:
+      - "./mongo/data:/data/dbbuy"
+
+  event:
+    container_name: event
+    build: ./event
+    restart: always
+    ports:
+      - "3002:3002"
+    links:
+      - mongoevent
+    environment:
+      - MONGO_URL=mongodb://mongoevent:27017/event
+
+  mongoevent:
+    image: mongo:4.0
+    restart: always
+    volumes:
+      - "./mongo/data:/data/dbevent"
+
+  ftapi:
+    container_name: ftapi
+    build: ./frontapi
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - users
+      - event
+      - buy
+      - rabbitmq
+    environment:
+      - RABBIT=amqp://rabbitmq
+      - URLEVENT=http://event:3002/event/
+      - URLBUY=http://buy:3003/buy/
+      - URLUSER=http://users:3001/users/
+      - SECRET=TESTTEST
+
+  users:
+    container_name: users
+    build: ./users
+    restart: always
+    ports:
+      - "3001:3001"
+    links:
+      - mongouser
+    environment:
+      - MONGO_URL=mongodb://mongouser:27017/users
+
+  mongouser:
+    image: mongo:4.0
+    restart: always
+    volumes:
+      - "./mongo/data:/data/dbuser"
+
+  notification:
+    container_name: notification
+    build: ./notification
+    restart: always
+    links:
+      - rabbitmq
+    environment:
+      - RABBIT=amqp://rabbitmq
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.11-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  ftui:
+    build: ./frontui
+    restart: always
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+        mode: host
+    environment:
+      FLASK_APP: "app.py"
+      FLASK_ENV: "development"
+      FLASK_RUN_PORT: "5000"
+      URL: "http://ftapi:3000/"
+    links:
+      - ftapi

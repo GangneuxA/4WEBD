@@ -62,6 +62,8 @@ def login():
             session["access_token"] = response.json()["token"]
             session["email"] = response.json()["user"]["email"]
             session["role"] = response.json()["user"]["role"]
+            session["lastname"] = response.json()["user"]["lastname"]
+            session["firstname"] = response.json()["user"]["firstname"]
             session["id"] = response.json()["user"]["_id"]
             session["authenticated"] = True
             return redirect(url_for("home"))
@@ -129,8 +131,8 @@ def change_user():
         body.update({"email": request.form.get("email")})
         body.update({"firstname": request.form.get("firstname")})
         body.update({"lastname": request.form.get("lastname")})
-        if request.form.get("password") != None:
-            body.update({"password": request.form.get("password")})
+        body.update({"password": request.form.get("password")})
+        
         url = URL + "users/"
 
         HEADERS.update({"Authorization": "Bearer " + session["access_token"]})
@@ -217,7 +219,7 @@ def admin_event():
         response = requests.get(url=url, headers=HEADERS)
         events = response.json()
 
-        return render_template("Admin_events.html", events=events)
+        return render_template("Admin_events.html", events=events["events"])
 
 
 @app.route("/event", methods=["GET", "POST"])
@@ -234,12 +236,12 @@ def event():
             "name": request.form.get("name"),
             "desc": request.form.get("description"),
             "price": request.form.get("price"),
-            "numberDispo": request.form.get("numberDispo"),
+            "numberDispo": request.form.get("count"),
         }
 
         response = requests.post(url=url, json=body, headers=HEADERS)
 
-        if response.status_code == 201:
+        if response.status_code == 200:
             return redirect(url_for("admin_event"))
         else:
             return redirect(url_for("error"))
