@@ -51,4 +51,19 @@ describe('Buy Controller', () => {
         expect(response.status).toBe(200);
         expect(response.ok).toBe(true);
     });
+
+    it('should get buys by event ID', async () => {
+        await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+        const eventID = '65fc25a586ae5b50a1cdd5b3'; 
+        const response = await fetch(`${URLBUY}/event/${eventID}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
+        expect(response.status).toBe(200);
+        expect(response.ok).toBe(true);
+    });
 });

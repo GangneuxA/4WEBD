@@ -178,6 +178,44 @@ router.get("/:id", buyControllers.findByUserId);
  */
 router.post("/", buyControllers.insert);
 
+/**
+ * @swagger
+ * /buy/event/{id}:
+ *   get:
+ *     summary: Récupérer les achats par ID d'événement
+ *     description: Récupère une liste d'achats associés à un événement spécifique.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description: ID de l'événement pour lequel récupérer les achats.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Succès de la requête. Retourne une liste des achats associés à l'événement spécifié.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Buy'
+ *       '500':
+ *         description: Une erreur s'est produite lors de la récupération des achats.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: Error
+ *                 message:
+ *                   type: string
+ *                   example: An error occurred while fetching accounts
+ *                 error:
+ *                   type: string
+ */
 router.get("/event/:id", buyControllers.findByEventId);
 
 
