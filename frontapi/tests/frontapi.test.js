@@ -2,8 +2,9 @@ require('dotenv').config()
 const URLEVENT = process.env.URLEVENT;
 const URLBUY = process.env.URLBUY;
 const URLUSER = process.env.URLUSER;
+const URLUSERSERVICE = process.env.URLUSERSERVICE;
 const URLLOGIN = process.env.URLLOGIN;
-let eventID = '';
+let eventId = '';
 let testUserId = '';
 let jwt = '';
 let headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
@@ -13,14 +14,14 @@ describe('Front API tests', () => {
     beforeAll(async () => {
         // Create a user
         const email = Math.random().toString(16).substring(2, 16) + '@example.test';
-        const newUser = {email: email, firstname: 'Test', lastname: 'Mann', password: 'password'};
-        const response = await fetch(`${URLUSER}`, {
+        const newUser = {email: email, firstname: 'Test', lastname: 'Mann', password: 'password', role: 'admin'};
+        const response = await fetch(`${URLUSERSERVICE}`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(newUser),
         });
         const userResponse = await response.json();
-        testUserId = userResponse.data._id;
+        testUserId = userResponse._id;
 
         // HACK : Manually wait for the user to be created
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -61,9 +62,9 @@ describe('Front API tests', () => {
         });
 
         const event = await response.json();
-        eventID = event._id;
+        eventId = event._id;
 
-        expect(response.status).toBe(201);
+        expect(response.status).toBe(200);
     });
 
     it('should fetch all events with pagination', async () => {
@@ -83,7 +84,7 @@ describe('Front API tests', () => {
 
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const response = await fetch(`${URLEVENT}/${eventID}`, {
+        const response = await fetch(`${URLEVENT}/${eventId}`, {
             method: 'GET',
             headers: headers,
         });
@@ -98,7 +99,7 @@ describe('Front API tests', () => {
 
         const updatedEvent = {name: 'update', desc: 'Description', numberDispo: 20, price: 20};
 
-        const response = await fetch(`${URLEVENT}/${eventID}`, {
+        const response = await fetch(`${URLEVENT}/${eventId}`, {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(updatedEvent),
@@ -112,7 +113,7 @@ describe('Front API tests', () => {
 
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        const response = await fetch(`${URLEVENT}/${eventID}`, {
+        const response = await fetch(`${URLEVENT}/${eventId}`, {
             method: 'DELETE',
             headers: headers,
         });
