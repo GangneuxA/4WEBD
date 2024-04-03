@@ -51,8 +51,8 @@ exports.searchById = async (req, res) => {
 
 exports.insert = async (req, res) => {
   try {
-    const { email, firstname, lastname, password } = req.body;
-    const user = new User({ email, firstname, lastname, password });
+    const { email, firstname, lastname, password, role } = req.body;
+    const user = new User({ email, firstname, lastname, password, role });
     user.save();
 
     res.status(201).send(user);
