@@ -171,7 +171,7 @@ describe('Front API tests', () => {
 
     // "buy" tests
     it('should insert a new buy', async () => {
-        const newBuy = { user: testUserId, event: testEventId, count: 1 };
+        const newBuy = { user: testUserId, eventid: testEventId, count: 1 };
 
         const response = await fetch(URLBUY, {
             method: 'POST',
@@ -180,9 +180,6 @@ describe('Front API tests', () => {
         });
 
         const createdBuy = await response.json();
-        // TODO : This fails with a cryptic error message :
-        //  "Failed to get account to"
-        console.debug(createdBuy);
         testBuyId = createdBuy.data._id;
 
         expect(response.status).toBe(201);
