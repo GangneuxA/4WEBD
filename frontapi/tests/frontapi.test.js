@@ -4,23 +4,23 @@ const URLBUY = process.env.URLBUY;
 const URLUSER = process.env.URLUSER;
 const URLLOGIN = process.env.URLLOGIN;
 let eventID = '';
-let userId = '';
+let testUserId = '';
 let jwt = '';
+let headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
 
-describe('Event Controller', () => {
+describe('Front API tests', () => {
+    // Before all tests : Get authentication token
     beforeAll(async () => {
         // Create a user
         const email = Math.random().toString(16).substring(2, 16) + '@example.test';
         const newUser = {email: email, firstname: 'Test', lastname: 'Mann', password: 'password'};
         const response = await fetch(`${URLUSER}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(newUser),
         });
         const userResponse = await response.json();
-        userId = userResponse.data._id;
+        testUserId = userResponse.data._id;
 
         // HACK : Manually wait for the user to be created
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -29,20 +29,26 @@ describe('Event Controller', () => {
         const credentials = {email: newUser.email, password: newUser.password}
         const loginResponse = await fetch(`${URLLOGIN}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(credentials),
 
         })
         const loginJson = await loginResponse.json();
         jwt = loginJson.token;
-        console.debug(`Grabbed auth token : ${jwt}`);
+        headers.Authorization = `Bearer ${jwt}`;
+        console.debug(`Grabbed auth token for test user.`);
 
     });
-    afterAll(() => {
+    // When tests are done : delete the test user
+    afterAll(async () => {
         // Delete the test user
-        console.log("This is where we should delete user " + userId);
+        const response = await fetch(`${URLUSER}`, {
+            method: 'DELETE',
+            headers: headers
+        });
+        const deleteResponse = await response.json();
+        console.log("Deleting test user " + testUserId + " : " + deleteResponse.status);
+
     });
 
     it('should insert a new event', async () => {
@@ -50,7 +56,7 @@ describe('Event Controller', () => {
 
         const response = await fetch(URLEVENT, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: headers,
             body: JSON.stringify(newEvent),
         });
 
@@ -66,7 +72,7 @@ describe('Event Controller', () => {
 
         const response = await fetch(`${URLEVENT}`, {
             method: 'GET',
-            headers: {'Accept': 'application/json'},
+            headers: headers,
         });
 
         expect(response.status).toBe(200);
@@ -79,7 +85,7 @@ describe('Event Controller', () => {
 
         const response = await fetch(`${URLEVENT}/${eventID}`, {
             method: 'GET',
-            headers: {'Accept': 'application/json'},
+            headers: headers,
         });
 
         expect(response.status).toBe(200);
@@ -94,7 +100,7 @@ describe('Event Controller', () => {
 
         const response = await fetch(`${URLEVENT}/${eventID}`, {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            headers: headers,
             body: JSON.stringify(updatedEvent),
         });
 
@@ -108,7 +114,7 @@ describe('Event Controller', () => {
 
         const response = await fetch(`${URLEVENT}/${eventID}`, {
             method: 'DELETE',
-            headers: {'Accept': 'application/json'},
+            headers: headers,
         });
 
         expect(response.status).toBe(200);
