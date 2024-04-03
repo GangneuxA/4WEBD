@@ -91,12 +91,9 @@ describe('Front API tests', () => {
     });
     // When tests are done : delete the test user
     afterAll(async () => {
-        if (DELETE_USER_AFTER_TESTS) {
-            await deleteTestUser();
-        } else {
-            console.debug("Test user was NOT DELETED. Set DELETE_USER_AFTER_TESTS env var to true.");
-        }
-        await deleteTestEvent();
+        // Unnecessary. Test data is deleted in the test themselves.
+        // await deleteTestUser();
+        // await deleteTestEvent();
     });
 
     // "event" tests
@@ -171,7 +168,7 @@ describe('Front API tests', () => {
 
     // "buy" tests
     it('should insert a new buy', async () => {
-        const newBuy = { user: testUserId, eventid: testEventId, count: 1 };
+        const newBuy = {user: testUserId, eventid: testEventId, count: 1};
 
         const response = await fetch(URLBUY, {
             method: 'POST',
@@ -185,7 +182,6 @@ describe('Front API tests', () => {
         expect(response.status).toBe(201);
     });
 
-
     it('should get all buys', async () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -198,7 +194,6 @@ describe('Front API tests', () => {
         expect(response.ok).toBe(true);
     });
 
-
     it('should get buys by user ID', async () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -209,6 +204,85 @@ describe('Front API tests', () => {
 
         expect(response.status).toBe(200);
         expect(response.ok).toBe(true);
+    });
+
+    // "users" tests
+    it('should insert a new user', async () => {
+        const newUser = {email: randomString, firstname: 'c', lastname: 'c', password: 'c'};
+
+        const response = await fetch(`${URLUSER}`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(newUser),
+        });
+
+
+        let userID = await response.json();
+        userID = userID._id;
+
+
+        expect(response.status).toBe(201);
+    });
+
+    it('should get all users', async () => {
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const response = await fetch(`${URLUSER}`, {
+            method: 'GET',
+            headers: headers
+        });
+
+        expect(response.status).toBe(200);
+        expect(response.ok).toBe(true);
+
+    });
+
+    it('should get a user by id', async () => {
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const response = await fetch(`${URLUSER}/${testUserId}`, {
+            method: 'GET',
+            headers: headers
+        });
+
+        expect(response.status).toBe(200);
+        expect(response.ok).toBe(true);
+
+    });
+
+    it('should update a user by ID', async () => {
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const updatedUser = {email: 'updated@example.com'};
+        const response = await fetch(`${URLUSER}`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(updatedUser)
+        });
+
+        let userEmail = await response.json();
+        userEmail = userEmail.data.email;
+
+        expect(response.status).toBe(200);
+        expect(userEmail).toBe('updated@example.com');
+
+    });
+
+    it('should delete a user by ID', async () => {
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        const response = await fetch(`${URLUSER}`, {
+            method: 'DELETE',
+            headers: headers,
+        });
+
+        expect(response.status).toBe(200);
+        expect(response.ok).toBe(true);
+
     });
 
 });
