@@ -9,11 +9,13 @@ let testUserId = '';
 let jwt = '';
 let headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
 
+const randomString = Math.random().toString(16).substring(2, 16);
+
 describe('Front API tests', () => {
     // Before all tests : Get authentication token
     beforeAll(async () => {
         // Create a user
-        const email = Math.random().toString(16).substring(2, 16) + '@example.test';
+        const email = randomString + '@example.test';
         const newUser = {email: email, firstname: 'Test', lastname: 'Mann', password: 'password', role: 'admin'};
         const response = await fetch(`${URLUSERSERVICE}`, {
             method: 'POST',
@@ -53,7 +55,7 @@ describe('Front API tests', () => {
     });
 
     it('should insert a new event', async () => {
-        const newEvent = {name: 'Event', desc: 'Description', numberDispo: 10, price: 20};
+        const newEvent = {name: `Event-${randomString}`, desc: 'Description', numberDispo: 10, price: 20};
 
         const response = await fetch(URLEVENT, {
             method: 'POST',
@@ -62,7 +64,7 @@ describe('Front API tests', () => {
         });
 
         const event = await response.json();
-        eventId = event._id;
+        eventId = event.data._id;
 
         expect(response.status).toBe(200);
     });
