@@ -1,4 +1,8 @@
-node_modules
+users/node_modules/
+notification/node_modules/
+event/node_modules/
+buy/node_modules/
+frontapi/node_modules/
 mongo/
 .idea/
 frontui/.venv/
